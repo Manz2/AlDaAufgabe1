@@ -1,0 +1,111 @@
+import java.io.FileReader;
+import java.io.LineNumberReader;
+import java.util.Scanner;
+public class UI {
+    private final static Scanner EINGABE = new Scanner(System.in);
+    public static void main(String[] args) {
+        Dictionary<String, String> dict = new SortedArrayDictionary<>();
+        while (EINGABE.hasNextLine()){
+            String command = EINGABE.nextLine();
+            String[] Input = command.split("[^a-z^A-Z^ß^ä^ö^ü^Ä^Ö^Ü]+");
+            if (Input[0].equals("create")){
+                if(Input[0].equals("SortedArrayDictionary")){
+                    dict = new SortedArrayDictionary<>();
+                    System.out.println('S');
+                } else if (Input[0].equals("HashDictionary")){
+                    dict = new HashDictionary<>(101);
+                    System.out.println('H');
+                }else {
+                    dict = new SortedArrayDictionary<>();
+                    System.out.println('S');
+                }
+            }
+            //read
+            if (Input[0].equals("read")){
+                //System.out.println("r");
+                int n = 0;
+
+                String[] eingabe = command.split("[^a-z^A-Z^ß^ä^ö^ü^Ä^Ö^Ü^0-9^.]+");
+                String leng = eingabe[1];
+
+                try {
+                    n = Integer.parseInt(leng);
+                } catch (Exception e){
+                   e.printStackTrace();
+                }
+
+                System.out.println(n);
+                int count = 0;
+                try {
+
+                    LineNumberReader in;
+                    in = new LineNumberReader(new FileReader(eingabe[2]));
+                    String line;
+
+                    // Text einlesen und Häfigkeiten aller Wörter bestimmen:
+                    while ((line = in.readLine()) != null&&count<n) {
+                        String[] wf = line.split("[^a-z^A-Z^ß^ä^ö^ü^Ä^Ö^Ü]+");
+                        int ab = 0;
+                        String d = "";
+                        String e = "";
+                        for (String w : wf) {
+                            if (w.length() == 0 || w.length() == 1)
+                                continue;
+                            //System.out.println(w);
+                            if(ab == 0){
+                                 d = w;
+                            } else {
+                                 e = w;
+                            }
+                            ab++;
+                        }
+                        final long timeStart = System.currentTimeMillis();
+                        dict.insert(d,e);
+                        final long timeEnd = System.currentTimeMillis();
+                        System.out.println("Laufzeit " + (timeEnd - timeStart) + " Millisek.");
+                        count++;
+                    }
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            }
+            if(Input[0].equals("p")){
+                for (Dictionary.Entry<String, String> e : dict) {
+                    System.out.println(e.getKey() + ": " + e.getValue());
+                }
+            }
+            //Search
+            if (Input[0].equals("s")){
+                String[] eingabe = command.split("[^a-z^A-Z^ß^ä^ö^ü^Ä^Ö^Ü]+");
+
+                String d = eingabe[1];
+                String a = dict.search(d);
+                System.out.println(a);
+            }
+            //Insert
+            if (Input[0].equals("i")){
+
+                String[] eingabe = command.split("[^a-z^A-Z^ß^ä^ö^ü^Ä^Ö^Ü]+");
+
+                String d = eingabe[1];
+                String e = eingabe[2];
+                System.out.println(dict.insert(d,e));
+            }
+
+            //remove
+            if (Input[0].equals("r")){
+                String[] eingabe = command.split("[^a-z^A-Z^ß^ä^ö^ü^Ä^Ö^Ü]+");
+                String d = eingabe[1];
+                String a = dict.remove(d);
+                System.out.println(a);
+            }
+            //exit
+            if (Input[0].equals("exit")){
+                System.exit(0);
+            }
+        }
+
+
+    }
+}
