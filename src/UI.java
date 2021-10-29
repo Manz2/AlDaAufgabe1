@@ -22,7 +22,7 @@ public class UI {
             }
             //read
             if (Input[0].equals("read")){
-                //System.out.println("r");
+                System.out.println("r");
                 int n = 0;
 
                 String[] eingabe = command.split("[^a-z^A-Z^ß^ä^ö^ü^Ä^Ö^Ü^0-9^.]+");
