@@ -9,10 +9,10 @@ public class UI {
             String command = EINGABE.nextLine();
             String[] Input = command.split("[^a-z^A-Z^ß^ä^ö^ü^Ä^Ö^Ü]+");
             if (Input[0].equals("create")){
-                if(Input[0].equals("SortedArrayDictionary")){
+                if(Input[1].equals("SortedArrayDictionary")){
                     dict = new SortedArrayDictionary<>();
                     System.out.println('S');
-                } else if (Input[0].equals("HashDictionary")){
+                } else if (Input[1].equals("HashDictionary")){
                     dict = new HashDictionary<>(101);
                     System.out.println('H');
                 }else {
@@ -43,6 +43,7 @@ public class UI {
                     String line;
 
                     // Text einlesen und Häfigkeiten aller Wörter bestimmen:
+                    final long timeStart = System.currentTimeMillis();
                     while ((line = in.readLine()) != null&&count<n) {
                         String[] wf = line.split("[^a-z^A-Z^ß^ä^ö^ü^Ä^Ö^Ü]+");
                         int ab = 0;
@@ -59,12 +60,11 @@ public class UI {
                             }
                             ab++;
                         }
-                        final long timeStart = System.currentTimeMillis();
                         dict.insert(d,e);
-                        final long timeEnd = System.currentTimeMillis();
-                        System.out.println("Laufzeit " + (timeEnd - timeStart) + " Millisek.");
                         count++;
                     }
+                    final long timeEnd = System.currentTimeMillis();
+                    System.out.println("Laufzeit " + (timeEnd - timeStart) + " Millisek.");
                 } catch (Exception e){
                     e.printStackTrace();
                 }
@@ -80,7 +80,10 @@ public class UI {
                 String[] eingabe = command.split("[^a-z^A-Z^ß^ä^ö^ü^Ä^Ö^Ü]+");
 
                 String d = eingabe[1];
+                final long timeStart = System.currentTimeMillis();
                 String a = dict.search(d);
+                final long timeEnd = System.currentTimeMillis();
+                System.out.println("Laufzeit " + (timeEnd - timeStart) + " Millisek.");
                 System.out.println(a);
             }
             //Insert

@@ -124,6 +124,7 @@ public class HashDictionary<K,V> implements Dictionary<K,V>{
             if(hash[index].get(i).getKey().equals(key)){
                 return hash[index].get(i).getValue();
             }
+            i++;
         }
         return null;
     }
@@ -158,19 +159,15 @@ public class HashDictionary<K,V> implements Dictionary<K,V>{
         private Entry<K,V> current = getCurrent();
         private int expectedMod = modCount;
         private int curr = 0;
-        private int ind = 0;
 
         private Entry<K,V> getCurrent() {
             for(int i = 0;i<size;i++){
                 if(hash[i]!=null){
                     return hash[i].get(0);
                 }
-                ind++;
             }
             return null;
         }
-
-
 
         @Override
         public boolean hasNext() {
@@ -179,40 +176,37 @@ public class HashDictionary<K,V> implements Dictionary<K,V>{
 
         @Override
         public Entry<K,V> next() {
+            if(curr==0){
+                curr++;
+                return current;
+            }
             if (expectedMod != modCount) {
                 throw new ConcurrentModificationException();
             }
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
-            int i = 0;
-            int index = 0;
-            while (index < size) {
-                if(hash[index] == null){
-                    index++;
-                    continue;
-                }
-                for (Entry<K,V> x:hash[index]) {
-                    if(x.getKey().equals(current.getKey())){
-                        if(hash[index].size()>hash[index].indexOf(x)+1) {
-                            curr++;
-                            current = hash[index].get(hash[index].indexOf(x) + 1);
-                            return hash[index].get(hash[index].indexOf(x) + 1);
-                        } else {
-                            index++;
-                            for (int j = index+1; j < size; j++) {
-                                if (hash[index].get(0) != null){
-                                    curr++;
-                                    current = hash[index].get(0);
-                                    return hash[index].get(0);
-                                }
-                                index++;
+            int ke = parsKey((String) current.getKey());;
+            int index = ke% size;
+            for (Entry<K,V> x:hash[index]) {
+                if(x.getKey().equals(current.getKey())){
+                    if(hash[index].size()>((hash[index].indexOf(x))+1)) {
+                        curr++;
+                        current = hash[index].get(hash[index].indexOf(x) + 1);
+                        return hash[index].get(hash[index].indexOf(x) + 1);
+                    } else {
+                        index++;
+                        for (int j = index; j <= size; j++) {
+                            if (hash[index]!=null&&hash[index].get(0) != null){
+                                curr++;
+                                current = hash[index].get(0);
+                                return hash[index].get(0);
                             }
-                            return null;
+                            index++;
                         }
+                        return null;
                     }
                 }
-                index++;
             }
             return null;
         }
