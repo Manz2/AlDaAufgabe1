@@ -205,7 +205,7 @@ public class BinaryTreeDictionary<K extends Comparable<? super K>, V> implements
 
 		@Override
 		public boolean hasNext() {
-			return gro != size();
+			return gro <= size();
 		}
 
 		@Override
