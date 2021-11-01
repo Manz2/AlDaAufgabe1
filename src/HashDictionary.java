@@ -58,7 +58,7 @@ public class HashDictionary<K,V> implements Dictionary<K,V>{
             hash[index].addLast(x);
             gro++;
         }
-        if(2<gro/size) {
+        if(2<=(gro/size)) {
                 //vergrößern
                 sizeNew = size *2;
                 while (!isPrime(sizeNew)){
@@ -67,7 +67,7 @@ public class HashDictionary<K,V> implements Dictionary<K,V>{
                 hashNew = new LinkedList[sizeNew];
                 for (LinkedList d :hash) {
                     if(d!=null){
-                        copy(d,hashNew);
+                        copy(d);
                     }
                 }
                 hash = hashNew;
@@ -78,12 +78,32 @@ public class HashDictionary<K,V> implements Dictionary<K,V>{
         return null;
     }
 
-    public void copy(LinkedList<Entry<K,V>> no,LinkedList[] arr){
+    public void copy(LinkedList<Entry<K,V>> no){//Fehler beim copy
         int i = 0;
 
         while (i < no.size()) {
-            insert(no.get(i).getKey(),no.get(i).getValue());
+            insertnew(no.get(i).getKey(),no.get(i).getValue());
             i++;
+        }
+    }
+
+    private void insertnew(K key, V value) {
+        int ke = parsKey((String) key);
+        int index = ke % sizeNew;
+        //Insert if hash adress is empty
+        Entry<K, V> x = new Entry<>(key, value);
+        if (hashNew[index] == null) {//entry wasn't already in the dictionary
+            hashNew[index]  = new LinkedList<>();
+            hashNew[index].add(x);
+        }else {
+            //Insert if Hash adress is not empty
+            for (Entry<K,V> q:hashNew[index]) {
+                if (q.getKey().equals(x.getKey())) {
+                    V old = q.getValue();
+                    q.setValue(x.getValue());
+                }
+            }
+            hashNew[index].addLast(x);
         }
     }
 
@@ -104,7 +124,6 @@ public class HashDictionary<K,V> implements Dictionary<K,V>{
             if(hash[index].get(i).getKey().equals(key)){
                 return hash[index].get(i).getValue();
             }
-            i++;
         }
         return null;
     }
@@ -122,6 +141,7 @@ public class HashDictionary<K,V> implements Dictionary<K,V>{
             }
             i++;
         }
+        modCount++;
         return null;
     }
 
@@ -154,7 +174,7 @@ public class HashDictionary<K,V> implements Dictionary<K,V>{
 
         @Override
         public boolean hasNext() {
-            return  curr != size();
+            return curr != size();
         }
 
         @Override
@@ -167,23 +187,30 @@ public class HashDictionary<K,V> implements Dictionary<K,V>{
             }
             int i = 0;
             int index = 0;
-            while (index <= size) {
+            while (index < size) {
                 if(hash[index] == null){
                     index++;
                     continue;
                 }
-                while (i < hash[index].size()) {
-                    if (i+1 < hash[index].size()) {
-                        if (hash[index].get(i + 1) != null) { //problem
-                            return hash[index].get(i + 1);
+                for (Entry<K,V> x:hash[index]) {
+                    if(x.getKey().equals(current.getKey())){
+                        if(hash[index].size()>hash[index].indexOf(x)+1) {
+                            curr++;
+                            current = hash[index].get(hash[index].indexOf(x) + 1);
+                            return hash[index].get(hash[index].indexOf(x) + 1);
+                        } else {
+                            index++;
+                            for (int j = index+1; j < size; j++) {
+                                if (hash[index].get(0) != null){
+                                    curr++;
+                                    current = hash[index].get(0);
+                                    return hash[index].get(0);
+                                }
+                                index++;
+                            }
+                            return null;
                         }
                     }
-                    /*for (int k = index; k <= size; k++) {
-                        if (hash[k] != null) {
-                            return hash[k].get(0);
-                        }
-                    }*/
-                    i++;
                 }
                 index++;
             }

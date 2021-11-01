@@ -155,7 +155,6 @@ public class SortedArrayDictionary<K extends Comparable<? super K>, V> implement
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
-
             return sortedArray[current++];
         }
     }
