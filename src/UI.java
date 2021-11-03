@@ -13,9 +13,13 @@ public class UI {
                     dict = new SortedArrayDictionary<>();
                     System.out.println('S');
                 } else if (Input[1].equals("HashDictionary")){
-                    dict = new HashDictionary<>(101);
+                    dict = new HashDictionary<>(3);
                     System.out.println('H');
-                }else {
+                }else if(Input[1].equals("BinaryTreeDictionary")){
+                    dict = new BinaryTreeDictionary<>();
+                    System.out.println('B');
+                }
+                else {
                     dict = new SortedArrayDictionary<>();
                     System.out.println('S');
                 }
