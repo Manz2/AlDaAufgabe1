@@ -1,7 +1,4 @@
-import java.util.Comparator;
-import java.util.ConcurrentModificationException;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
  * Implementation of the Dictionary interface as AVL tree.
@@ -18,6 +15,8 @@ public class BinaryTreeDictionary<K extends Comparable<? super K>, V> implements
 
 	private V oldValue;
 	private int modCount = 0;
+    private Node<K, V> root = null;
+    private int size = 0;
 
 	@Override
 	public V insert(K key, V value) {
@@ -197,43 +196,46 @@ public class BinaryTreeDictionary<K extends Comparable<? super K>, V> implements
 
 	private class BinaryTreeIterator implements Iterator<Entry<K, V>> {
 
-		private Node<K, V> current = leftMostDescendant(root);
+		//private Node<K, V> current = leftMostDescendant(root);
 		private int expectedMod = modCount;
-		private Entry<K, V> data = new Entry<>(root.key, root.value);
+		//private Entry<K, V> data = new Entry<>(root.key, root.value);
 		private int  gro = 0;
+        Node<K,V> localNode = (Node<K,V>) root;
+        Stack<Node<K,V>> stack;
 
+        public BinaryTreeIterator() {
+            stack = new Stack<Node<K,V>>();
 
-		@Override
+            while (localNode != null) {
+                stack.push(localNode);
+                localNode = localNode.left;//left child
+            }
+        }
+
+        @Override
 		public boolean hasNext() {
-			return gro <= size();
+			return !stack.empty();//return gro <= size();
 		}
 
-		@Override
-		public Entry<K, V> next() {
-			if (expectedMod != modCount) {
-				throw new ConcurrentModificationException();
-			}
-			if (!hasNext()) {
-				throw new NoSuchElementException();
-			}
+        @Override
+        public Entry<K,V> next() {
+            Node<K,V> node = stack.pop();
+            //V v = node.value;
+            Entry<K,V> x = new Entry<>(node.key,node.value);
+            if (node.right != null) {
+                node = node.right;
+                while (node != null) {
+                    stack.push(node);
+                    node = node.left;
+                }
+            }
+            return x;
+        }
 
-			while (current != null) {
-				if (current.right != null) {
-					current = leftMostDescendant(current.right);
-					Entry<K, V> e = new Entry<>(current.key, current.value);
-					gro++;
-					return e;
-				} else {
-					current = parentOfLeftMostAncestor(current);
-					Entry<K, V> e = new Entry<>(current.key, current.value);
-					gro++;
-					return e;
-				}
-			}
-			Entry<K, V> e = new Entry<>(current.key, current.value);
-			gro++;
-			return e;
-		}
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
 	}
 	private Node<K,V> leftMostDescendant(Node<K,V> p) {
 		assert p != null;
@@ -273,8 +275,7 @@ public class BinaryTreeDictionary<K extends Comparable<? super K>, V> implements
 		}
 	}
 
-	private Node<K, V> root = null;
-	private int size = 0;
+
 
 	// ...
 
