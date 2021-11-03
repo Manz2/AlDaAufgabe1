@@ -19,7 +19,13 @@ public class HashDictionary<K,V> implements Dictionary<K,V>{
         modCount++;
     }
 
-    //parsKey converts String 'key' to int
+
+    /**
+     * parsKey converts String 'key' to int
+     *
+     * @param key
+     * @return the hash of the String
+     */
     static int parsKey(String key){
         int adr = 0;
         for (int i = 0; i < key.length(); i++)
@@ -78,7 +84,12 @@ public class HashDictionary<K,V> implements Dictionary<K,V>{
         }
         return true; // prime number
     }
-    //copies 'entryC' in 'hashNew'
+
+    /**
+     * copies 'entryC' in 'hashNew'
+     *
+     * @param entryC
+     */
     public void copy(LinkedList<Entry<K,V>> entryC){
         int i = 0;
         while (i < entryC.size()) {
@@ -169,7 +180,12 @@ public class HashDictionary<K,V> implements Dictionary<K,V>{
             return curr != size();
         } // returns if all entries where printed once
 
-        //returns the following Entry
+
+        /**
+         * returns the following Entry
+         *
+         * @return
+         */
         @Override
         public Entry<K,V> next() {
             if(curr==0){//checks if hasNext was called the first Time
