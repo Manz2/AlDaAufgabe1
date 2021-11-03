@@ -124,6 +124,9 @@ public class HashDictionary<K,V> implements Dictionary<K,V>{
         int ke = parsKey((String) key);;
         //int index = key.intValue() % size;
         int index = ke% size; //calculates the index of 'key'
+        if(hash[index] == null){
+            return null;
+        }
         int i = 0;
         while (i < hash[index].size()) {
             if(hash[index].get(i).getKey().equals(key)){

@@ -1,5 +1,6 @@
 import java.io.FileReader;
 import java.io.LineNumberReader;
+import java.util.Arrays;
 import java.util.Scanner;
 public class UI {
     private final static Scanner EINGABE = new Scanner(System.in);
@@ -89,6 +90,30 @@ public class UI {
                 final long timeEnd = System.currentTimeMillis();
                 System.out.println("Laufzeit " + (timeEnd - timeStart) + " Millisek.");
                 System.out.println(a);
+            }
+            //searchall
+            if (Input[0].equals("searchAll")){
+                /**
+                 * search for all keys
+                 */
+                final long timeStart = System.currentTimeMillis();
+                for (Dictionary.Entry<String,String> e:dict) {
+                    String a = dict.search(e.getKey());
+                }
+                final long timeEnd = System.currentTimeMillis();
+                System.out.println("Laufzeit " + (timeEnd - timeStart) + " Millisek.");
+            }
+            //searchallE
+            if (Input[0].equals("searchAllE")){
+                /**
+                 * search for all keys
+                 */
+                final long timeStart = System.currentTimeMillis();
+                for (Dictionary.Entry<String,String> e:dict) {
+                    String a = dict.search(e.getValue());
+                }
+                final long timeEnd = System.currentTimeMillis();
+                System.out.println("Laufzeit " + (timeEnd - timeStart) + " Millisek.");
             }
             //Insert
             if (Input[0].equals("i")){

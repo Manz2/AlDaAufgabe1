@@ -270,6 +270,7 @@ public class BinaryTreeDictionary<K extends Comparable<? super K>, V> implements
         return new BinaryTreeIterator();
     }
 
+
     private class BinaryTreeIterator implements Iterator<Entry<K, V>> {
 
         Node<K, V> currentNode = root;
